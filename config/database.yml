@@ -12,8 +12,15 @@ test:
   database: alpha_desk_test
 
 production:
-  <<: *default
-  database: alpha_desk_production
-  username: <%= ENV["DATABASE_USERNAME"] %>
-  password: <%= ENV["DATABASE_PASSWORD"] %>
-  host: <%= ENV.fetch("DATABASE_HOST") { "localhost" } %>
+  primary: &primary_production
+    <<: *default
+    database: <%= ENV.fetch("DATABASE_NAME") { "alpha_desk_production" } %>
+    username: <%= ENV["DATABASE_USERNAME"] %>
+    password: <%= ENV["DATABASE_PASSWORD"] %>
+    host: <%= ENV.fetch("DATABASE_HOST") { "localhost" } %>
+  queue:
+    <<: *primary_production
+  cache:
+    <<: *primary_production
+  cable:
+    <<: *primary_production
